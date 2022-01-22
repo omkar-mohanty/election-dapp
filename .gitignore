@@ -13,3 +13,4 @@ typechain
 cache
 artifacts
 addr.txt
+Greeter.sol
