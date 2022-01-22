@@ -49,9 +49,13 @@ contract Election is Ownable{
         Voter storage sender = voters[msg.sender];
         sender.hasVoted = true;
         sender.vote=toProposal;
+        //TODO(change voteCount to 1 when voting for 1st time)
         proposals[toProposal].voteCount++;
     }
     function addProp(string memory _statement) public onlyOwner  {
+        /*
+        TODO(Initialize with -1 to diff b/w 0 votes and newly added) 
+        */
         proposals.push(Proposal(_statement,0));
     }
 
@@ -59,6 +63,9 @@ contract Election is Ownable{
         Voter memory newVoter =  Voter(id,true,false,0);
         voterArr.push(newVoter);
         uint index =voterArr.length -1;
+       _AddVoter(index, id);
+    }
+    function _AddVoter(uint index,address id)internal {
         Voter storage tempVoter = voterArr[index];
         voters[id] = tempVoter;
     }
@@ -88,5 +95,8 @@ contract Election is Ownable{
     }
     function getElecAddr()external view returns(address) {
         return address(this);
+    }
+    function hasVoted()external view returns(bool){
+        return voters[msg.sender].hasVoted;
     }
 }
