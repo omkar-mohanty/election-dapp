@@ -21,9 +21,11 @@ contract Election is Ownable{
         uint8 voteCount;
     }
 
-    mapping(address=>Voter) public voters;
-    Proposal[] public proposals;
+    mapping(address=>Voter) private voters;
+    Proposal[] private proposals;
+    
     address private _admin;
+    Voter[] private voterArr;
 
     modifier isValidVoter(address id) {
         require(voters[id].hasRightToVote,"No right to vote");
@@ -35,10 +37,7 @@ contract Election is Ownable{
         require(toProp>=0 && toProp<proposals.length,"Invalid");
         _;
     }
-    function addProp(string memory _statement) public onlyOwner  {
-        proposals.push(Proposal(_statement,0));
-    }
-
+    
 //The vote function checks if :-
 // 1.The voter has right to vote.
 // 2.If the voter has already voted.
@@ -51,12 +50,21 @@ contract Election is Ownable{
         Voter storage sender = voters[msg.sender];
         sender.hasVoted = true;
         sender.vote=toProposal;
+        //TODO(change voteCount to 1 when voting for 1st time)
         proposals[toProposal].voteCount++;
+    }
+    function addProp(string memory _statement) public onlyOwner  {
+        /*
+        TODO(Initialize with -1 to diff b/w 0 votes and newly added) 
+        */
+        proposals.push(Proposal(_statement,0));
     }
 
     function addVoter(address id) public onlyOwner  {
-       Voter memory newVoter =  Voter(id,true,false,0);
-       voters[id]=newVoter;
+        Voter memory newVoter =  Voter(id,true,false,0);
+        voterArr.push(newVoter);
+        uint index =voterArr.length -1;
+        voters[id] =  voterArr[index];
     }
 //The winning proposal must have greater than 2 votes 
 //All the proposals are compared against the proposal with maximum votes.
@@ -78,5 +86,14 @@ contract Election is Ownable{
 
     function getProp() public view returns( Proposal[] memory) {
         return proposals;
+    }
+    function getVoters()public view returns( Voter[] memory) {
+        return voterArr;
+    }
+    function getElecAddr()external view returns(address) {
+        return address(this);
+    }
+    function hasVoted()external view returns(bool){
+        return voters[msg.sender].hasVoted;
     }
 }
