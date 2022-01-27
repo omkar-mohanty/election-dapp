@@ -23,6 +23,7 @@ contract Election is Ownable{
 
     mapping(address=>Voter) private voters;
     Proposal[] private proposals;
+    
     address private _admin;
     Voter[] private voterArr;
 
@@ -63,11 +64,7 @@ contract Election is Ownable{
         Voter memory newVoter =  Voter(id,true,false,0);
         voterArr.push(newVoter);
         uint index =voterArr.length -1;
-       _AddVoter(index, id);
-    }
-    function _AddVoter(uint index,address id)internal {
-        Voter storage tempVoter = voterArr[index];
-        voters[id] = tempVoter;
+        voters[id] =  voterArr[index];
     }
 //The winning proposal must have greater than 2 votes 
 //All the proposals are compared against the proposal with maximum votes.

@@ -5,11 +5,9 @@ import Home from './components/Home'
 import './components/Install'
 import Install from './components/Install'
 function App() {
-    if (window.ethereum) {
-      return(<Home></Home>)
-    }else{
-      return (<Install></Install>)
-    }
+  return (<>
+
+  </>)
 }
 
 export default App
