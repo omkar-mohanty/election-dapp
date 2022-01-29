@@ -1,11 +1,30 @@
 import { Typography } from "@mui/material";
 import { useParams } from "react-router-dom"
-import { getEntry } from "../data/data";
 import Grid from '@mui/material/Grid';
+import { useState, useEffect, useContext } from "react";
+import ElectionFactory from "../data/electionContract";
 
+let placeholder = {
+    name: "Loading",
+    elecAddr: "Loading",
+    adminAddr: "Loading",
+};
+
+import { ElectionContext } from "./Main";
+import Data from "../components/Data";
 export default function SingleElection() {
     let params = useParams();
-    let election = getEntry(parseInt(params.id, 0));
+    let name = params.id;
+    let electionFactory = useContext(ElectionContext);
+    let [election, electionState] = useState(placeholder);
+    useEffect(() => {
+        electionFactory
+            .init()
+            .then(() => {
+                const updatedElection = electionFactory.getElectionByName(name);
+                electionState(updatedElection);
+            })
+    }, [])
     return (
 
         <Grid
@@ -15,9 +34,7 @@ export default function SingleElection() {
             alignItems="center"
             justifyContent="center"
         >
-            <Typography variant="h1">
-                {election.name}
-            </Typography>
+            <Data election={election} />
         </Grid>);
 
 }

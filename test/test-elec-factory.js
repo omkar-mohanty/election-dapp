@@ -15,6 +15,8 @@ describe("Smart Election Factory", function () {
     await electionFactory.connect(owner).addElection("test1");
 
     const testElecMeta = await electionFactory.getElection("test1");
+    const allElections = await electionFactory.getCurrentElections();
+    console.log(allElections);
     expect(testElecMeta.name).to.equal("test1");
     expect(testElecMeta.adminAddr).to.equal(owner.address);
     const testElection = new ethers.Contract(testElecMeta.elecAddr, abi, provider);
