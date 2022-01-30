@@ -1,9 +1,19 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import Grid from '@mui/material/Grid';
 import { Button, Typography } from "@mui/material";
 import Link from '@mui/material/Link';
-
-export default function Metamask() {
+import { isWalletUnlocked } from "../data/electionContract";
+export default function MetamaskLogin(props) {
+    useEffect(() => {
+        setInterval(() => {
+            let res = isWalletUnlocked();
+            res.then((val) => {
+                if (val) {
+                    props.stateUnlocked(val);
+                }
+            })
+        }, 100)
+    }, [])
     return (
         <Grid
             container
@@ -14,7 +24,7 @@ export default function Metamask() {
             style={{ minHeight: '100vh' }}
         >
             <Typography variant="h3">
-                Election requires Metamask to work
+                Please unlock Metamask wallet.
             </Typography>
             <Button
                 size="large"

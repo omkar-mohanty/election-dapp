@@ -1,28 +1,17 @@
-import BasicCard from "../components/BasicCard";
-import { getData } from "../data/data";
-import Box from '@mui/material/Box';
+import { useContext, useEffect, useState } from "react";
+import AllElections from "../components/AllElections";
+import { ElectionFactoryContext } from "./Main";
+
 export default function Election() {
-    let elections = getData();
+    let [elections, elecState] = useState([]);
+    let electionFactory = useContext(ElectionFactoryContext);
+    useEffect(() => {
+        elecState(electionFactory.getElections());
+        electionFactory.init().then(() => {
+            elecState(electionFactory.getElections());
+        })
+    }, []);
     return (
-        <div style={{ width: '100%' }}>
-            <Box
-                sx={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(3, 1fr)',
-                    columnGap: 3,
-                    rowGap: 3,
-                }}
-            >
-                {
-                    elections.map((election) => (
-                        <BasicCard
-                            id={election.id}
-                            path={election.id}
-                            name={election.id}
-                        />
-                    ))
-                }
-            </Box>
-        </div>
+        <AllElections elections={elections} />
     )
 } 

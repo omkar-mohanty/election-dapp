@@ -15,7 +15,7 @@ async function main() {
 
   // We get the contract to deploy
   const ElectionFactory = await hre.ethers.getContractFactory("ElectionFactory");
-  const electionFactory = await ElectionFactory.deploy("Hello, Hardhat!");
+  const electionFactory = await ElectionFactory.deploy();
 
   await electionFactory.deployed();
 
