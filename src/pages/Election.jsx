@@ -1,14 +1,16 @@
 import { useContext, useEffect, useState } from "react";
 import AllElections from "../components/AllElections";
-import ElectionFactory from "../data/electionContract";
-import { ElectionContext } from "./Main";
+import { ElectionFactoryContext } from "./Main";
 
-export default function Election(props) {
+export default function Election() {
     let [elections, elecState] = useState([]);
-    let electionFactory = useContext(ElectionContext);
+    let electionFactory = useContext(ElectionFactoryContext);
     useEffect(() => {
         elecState(electionFactory.getElections());
-    }, [])
+        electionFactory.init().then(() => {
+            elecState(electionFactory.getElections());
+        })
+    }, []);
     return (
         <AllElections elections={elections} />
     )

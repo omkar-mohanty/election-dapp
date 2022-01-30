@@ -6,8 +6,8 @@ import AddButton from "../components/AddButton";
 import ElectionFactory from "../data/electionContract";
 
 
-export let ElectionContext = createContext(null);
-export default function Main() {
+export let ElectionFactoryContext = createContext();
+const ElectionFactoryProvider = ({ children }) => {
     let [electionFactory, stateElectionFactory] = useState(new ElectionFactory());
     useEffect(() => {
         const newFactory = new ElectionFactory();
@@ -16,7 +16,16 @@ export default function Main() {
             .then(() => {
                 stateElectionFactory(newFactory);
             })
-    }, [])
+    }, []);
+    return (
+        <ElectionFactoryContext.Provider value={electionFactory}>
+            {children}
+        </ElectionFactoryContext.Provider>
+    )
+
+}
+export default function Main() {
+
     return (
         <Grid
             container
@@ -31,9 +40,9 @@ export default function Main() {
                 </Paper>
             </Grid>
             <Grid item style={{ width: "100%" }}>
-                <ElectionContext.Provider value={electionFactory}>
+                <ElectionFactoryProvider>
                     <Outlet />
-                </ElectionContext.Provider>
+                </ElectionFactoryProvider>
             </Grid>
         </Grid>
     );

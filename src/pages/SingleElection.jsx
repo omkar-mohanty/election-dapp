@@ -1,40 +1,61 @@
-import { Typography } from "@mui/material";
 import { useParams } from "react-router-dom"
 import Grid from '@mui/material/Grid';
-import { useState, useEffect, useContext } from "react";
-import ElectionFactory from "../data/electionContract";
+import { useState, useEffect, createContext, useContext } from "react";
+import { ElectionFactoryContext } from "./Main";
+import ElectionTitle from "../components/Data";
+import AddPropButton from "../components/AddProp";
+import { getCurrentSigner } from "../data/electionContract";
+export let ElectionContext = createContext(null);
 
-let placeholder = {
-    name: "Loading",
-    elecAddr: "Loading",
-    adminAddr: "Loading",
-};
 
-import { ElectionContext } from "./Main";
-import Data from "../components/Data";
 export default function SingleElection() {
     let params = useParams();
     let name = params.id;
-    let electionFactory = useContext(ElectionContext);
-    let [election, electionState] = useState(placeholder);
+    let electionFactory = useContext(ElectionFactoryContext);
+    let [election, electionState] = useState({});
+    let [isAdmin, setAdmin] = useState(false);
     useEffect(() => {
         electionFactory
             .init()
             .then(() => {
                 const updatedElection = electionFactory.getElectionByName(name);
-                electionState(updatedElection);
+                updatedElection.init().then(() => {
+                    electionState(updatedElection);
+
+                })
             })
     }, [])
+    useEffect(() => {
+        let timer = setInterval(() => {
+            getCurrentSigner()
+                .getAddress()
+                .then((val) => {
+                    setAdmin(val === election.admin)
+                })
+        }, 100);
+        return () => clearInterval(timer);
+    }, [election]);
     return (
-
         <Grid
             container
-            spacing={0}
+            spacing={1}
             direction="column"
             alignItems="center"
-            justifyContent="center"
+            justifyContent="space-evenly"
         >
-            <Data election={election} />
-        </Grid>);
+            <Grid item style={{ width: "100%" }}>
+                <ElectionTitle name={name} />
+            </Grid>
+
+            <Grid item
+                container
+                style={{ width: "100%" }}
+                justifyContent="center"
+                alignItems="center">
+                <AddPropButton value={isAdmin} election={election} />
+            </Grid>
+        </Grid>
+
+    );
 
 }

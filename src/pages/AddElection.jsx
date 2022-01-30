@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import { Button } from "@mui/material";
 import ElectionFactory from '../data/electionContract';
-export default function AddElection(props) {
-    let [electionFactory, stateElectionFactory] = useState(props.electionFactory);
+import { ElectionFactoryContext } from './Main';
+export default function AddElection() {
+    let electionFactory = useContext(ElectionFactoryContext);
     let [textFieldValue, stateTextFieldValue] = useState('');
     return (
         <Grid

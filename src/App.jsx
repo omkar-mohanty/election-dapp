@@ -31,14 +31,17 @@ function App() {
       </Routes>
     )
   } else {
+
     return (
       <Routes>
         <Route path="/" element={<Main />}>
           <Route index element={<Home />} />
-          <Route path="elections" element={<Election electionFactory={electionFactory} />} >
+          <Route path="elections" element={<Election />} >
           </Route>
-          <Route path=":id" element={<SingleElection electionFactory={electionFactory} />} />
-          <Route path="add" element={<AddElection electionFactory={electionFactory} />} />
+          <Route path=":id">
+            <Route index element={<SingleElection />} />
+          </Route>
+          <Route path="add" element={<AddElection />} />
           <Route path="*" element={
             <Typography variant="h3">
               Broken Link Perhaps?

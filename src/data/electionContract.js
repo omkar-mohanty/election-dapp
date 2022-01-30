@@ -1,6 +1,7 @@
 const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
 import { ethers } from "ethers";
 import * as ElecFactory from "../artifacts/contracts/ElectionFactory.sol/ElectionFactory.json"
+import Election from "./election";
 
 export function getCurrentSigner() {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -51,7 +52,12 @@ export default class ElectionFactory {
     }
     getElectionByName(name) {
         const electionMap = this.electionHashMap;
-        return this.electionExists(name) ? electionMap.get(name) : { name: "Loading" };
+        if (this.electionExists(name)) {
+            const electionMeta = electionMap.get(name);
+            return new Election(electionMeta.elecAddr);
+        } else {
+            return { name: "Loading" }
+        }
     }
     _setMap() {
         this.allElections.map((val) => {
