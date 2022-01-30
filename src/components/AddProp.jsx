@@ -3,6 +3,31 @@ import { useEffect, useState } from "react";
 import { TextField, Grid } from "@mui/material";
 
 
+const checkProposalName = (statement) => {
+    return statement.length != 0;
+}
+
+const checkAddress = (address) => {
+    return address.length != 0;
+}
+const GridContainer = ({ children }) => (
+    <Grid
+        item
+        container
+        spacing={4}
+        direction="column"
+        alignItems="center"
+        justifyContent="space-evenly"
+        style={{ minHeight: "100%" }, { width: "100%" }}>
+        {children}
+    </Grid>
+)
+const GridItem = ({ children }) => (
+    <Grid
+        item>
+        {children}
+    </Grid>
+)
 const Proposal = ((props) => {
     const statement = props.proposal.statement;
     const voteCount = props.proposal.voteCount;
@@ -27,7 +52,10 @@ const Proposal = ((props) => {
                     </Typography>
                 </GridItem>
                 <GridItem>
-                    <Button size="small">
+                    <Button size="small"
+                        onClick={() => {
+                            props.election.vote(props.propId);
+                        }}>
                         Vote
                     </Button>
                 </GridItem>
@@ -51,58 +79,30 @@ const AllProposals = ((props) => {
         )
     } else {
         return (
-            <>
-                <Grid
-                    container
-                    spacing={1}
-                    direction="column"
-                    alignItems="center"
-                    justifyContent="center">
-                    {proposals.map((item, index) => (
-                        <GridItem>
-                            <Proposal key={index} proposal={item} />
-                        </GridItem>
-                    ))}
-                    <GridItem>
-                        <Button
-                            disabled={notUpdated}
-                            variant="outlined"
-                            onClick={() => stateProposalHidden(val => !val)}>
-                            Show Proposals
-                        </Button>
+            <Grid
+                container
+                spacing={1}
+                direction="column"
+                alignItems="center"
+                justifyContent="center">
+                {proposals.map((item, index) => (
+                    <GridItem >
+                        <Proposal propId={index} proposal={item} election={props.election} />
                     </GridItem>
-                </Grid>
-
-            </>
+                ))}
+                <GridItem>
+                    <Button
+                        disabled={notUpdated}
+                        variant="outlined"
+                        onClick={() => stateProposalHidden(val => !val)}>
+                        Show Proposals
+                    </Button>
+                </GridItem>
+            </Grid>
         )
     }
 })
 
-const GridContainer = ({ children }) => (
-    <Grid
-        item
-        container
-        spacing={4}
-        direction="column"
-        alignItems="center"
-        justifyContent="space-evenly"
-        style={{ minHeight: "100%" }, { width: "100%" }}>
-        {children}
-    </Grid>
-)
-const GridItem = ({ children }) => (
-    <Grid
-        item>
-        {children}
-    </Grid>
-)
-const checkProposalName = (statement) => {
-    return statement.length != 0;
-}
-
-const checkAddress = (address) => {
-    return address.length != 0;
-}
 export default function AddPropButton(props) {
     let [textFieldValue, stateFieldValue] = useState('');
     let [errorProposal, changeError] = useState(false);
@@ -125,7 +125,7 @@ export default function AddPropButton(props) {
             <GridItem>
                 <Button
                     disabled={!props.value && !notUpdated}
-                    variant="contained"
+                    variant="outlined"
                     onClick={() => {
                         const valid = checkAddress(textFieldValue);
                         changeError(!valid);
@@ -145,7 +145,7 @@ export default function AddPropButton(props) {
             <GridItem>
                 <Button
                     disabled={!props.value && !notUpdated}
-                    variant="contained"
+                    variant="outlined"
                     onClick={() => {
                         const valid = checkProposalName(textFieldValue);
                         changeError(!valid);
@@ -154,6 +154,24 @@ export default function AddPropButton(props) {
                     }}
                 >
                     {notAdminAddVoter}
+                </Button>
+            </GridItem>
+            <GridItem>
+                <Button
+                    disabled={!props.value && !notUpdated}
+                    variant="contained"
+                    size="large"
+                    onClick={() => {
+                        let promise = props.election.getWinningProposal();
+                        let winningProposal = -1;
+                        promise.then((val) => {
+                            winningProposal = val;
+                        }).finally(() => {
+                            alert(winningProposal);
+                        })
+                    }}
+                >
+                    Get Winning Proposal
                 </Button>
             </GridItem>
         </GridContainer>

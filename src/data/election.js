@@ -46,6 +46,11 @@ export default class Election {
         election.connect(signer).addVoter(address);
         this.update();
     }
+    async getWinningProposal() {
+        const election = this.election;
+        const signer = getCurrentSigner();
+        return election.connect(signer).winningProposal();
+    }
     get proposals() {
         return this._proposals;
     }
