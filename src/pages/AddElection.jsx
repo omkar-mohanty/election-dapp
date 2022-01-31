@@ -35,5 +35,5 @@ export default function AddElection() {
                 }}
             >Add Election</Button>
 
-        </Grid >);
+        </Grid>);
 }
