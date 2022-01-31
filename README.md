@@ -56,7 +56,27 @@ To ensure that only valid voters can vote the election admin adds the voters usi
         voters[id] = voterArr[index];
     }
 ```
-  
+## Installation
+To get this repo on your local machine run 
+```shell
+git clone https://github.com/omkar-mohanty/election-dapp.git
+```
+To install all the dependencies run 
+```shell
+npm install
+```
+Additionally this project also requires geth and Solidity compiler (>0.8.0) to run
+
+Installing solc
+```shell
+npm install solc
+```
+Installing geth
+```shell
+sudo add-apt-repository -y ppa:ethereum/ethereum
+sudo apt-get update
+sudo apt-get install ethereum
+```
 
 ```shell
 
