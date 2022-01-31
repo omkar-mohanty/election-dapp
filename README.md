@@ -67,31 +67,31 @@ npm install
 ```
 Additionally this project also requires geth and Solidity compiler (>0.8.0) to run
 
-Installing solc
+### Installing solc
 ```shell
 npm install solc
 ```
-Installing geth
+### Installing geth
 ```shell
 sudo add-apt-repository -y ppa:ethereum/ethereum
 sudo apt-get update
 sudo apt-get install ethereum
 ```
+## Running the Application
+Election Dapp requires a blockchain network to run by default this project uses hardhat test network for devlopment purposes.
 
+### Starting hardhat blockchain
 ```shell
-
-hardhat run --network ropsten scripts/deploy.js
-
+npx hardhat node
 ```
-
-  
-
-Then, copy the deployment address and paste it in to replace `DEPLOYED_CONTRACT_ADDRESS` in this command:
-
-  
-
+### Deploying Election Factory smart contract
+Election Factory smart contract is used to create instances of the Election smart contract 
 ```shell
-
-npx hardhat verify --network ropsten DEPLOYED_CONTRACT_ADDRESS "Hello, Hardhat!"
-
+npx hardhat run --network localhost scripts/deploy-elec-factory.js
 ```
+Then, copy the deployment address and paste it in to replace 
+
+```javascript
+const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
+```
+in src/data/electionFactory.js
