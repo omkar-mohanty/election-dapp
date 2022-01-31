@@ -9,12 +9,14 @@ import {
   Route
 } from "react-router-dom";
 import { Typography } from "@mui/material";
-import ElectionFactory, { isWalletUnlocked } from "./data/electionContract";
+import { isWalletUnlocked } from "./data/electionContract";
 import MetamaskLogin from "./pages/MetamaskLogin";
 
 function App() {
   let [unlocked, stateUnlocked] = useState(false);
-  let [electionFactory, stateElectionFactory] = useState(null);
+  useEffect(() => {
+    document.title = "Dapp Election";
+  }, []);
   useEffect(() => {
     isWalletUnlocked()
       .then((val) => {
