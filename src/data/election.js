@@ -1,3 +1,28 @@
+/*
+The following code can be potentially hard to read given the fact that it was 
+written by someone who was absolutely new to Javascript devlopment so any
+senior software devlopers reading my code here's a safety pig.
+.
+                         _
+ _._ _..._ .-',     _.._(`))
+'-. `     '  /-._.-'    ',/
+   )         \            '.
+  / _    _    |             \
+ |  a    a    /              |
+ \   .-.                     ;  
+  '-('' ).-'       ,'       ;
+     '-;           |      .'
+        \           \    /
+        | 7  .__  _.-\   \
+        | |  |  ``/  /`  /
+       /,_|  |   /,_/   /
+          /,_/      '`-'
+
+Election Class is made to hold data about one single Election.
+
+The UI isn't supposed to create an instance of the Election class rather
+the election factory returns an object when it is required to do so.
+*/
 import { ethers } from "ethers";
 import { getCurrentSigner } from "./electionContract";
 import * as ElectionAbi from "../artifacts/contracts/Election.sol/Election.json";
@@ -11,6 +36,7 @@ export default class Election {
         this._admin = 'NULL';
         this.constractAddress = contractAddress;
     }
+    //TODO: This function although meant to be async is actually blocking
     async init() {
         if (!this.isDone) {
             const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -22,6 +48,8 @@ export default class Election {
             this._admin = await election.connect(signer).getAdmin();
         }
     }
+    //The UI data needs to be updated frequently so as to reflect the 
+    //current state of the blockchain
     async update() {
         const election = this.election;
         const signer = getCurrentSigner();
